@@ -1,10 +1,11 @@
 package model;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 public class Book {
   final private Author author;
-  private int id;
+  final private UUID id;
   final private String title;
   final private boolean isAvailable;
   final private LocalDateTime createdAt;
@@ -16,13 +17,14 @@ public class Book {
     this.isAvailable = true;
     this.createdAt = LocalDateTime.now();
     this.updatedAt = LocalDateTime.now();
+    this.id = UUID.randomUUID();
   }
 
   public Author getAuthor() {
     return author;
   }
 
-  public int getId() {
+  public UUID getId() {
     return id;
   }
 

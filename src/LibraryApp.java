@@ -52,20 +52,22 @@ public class LibraryApp {
           System.out.println("Enter book's title:");
           String bookTitle = scanner.nextLine();
           System.out.println("Enter author's ID:");
-          int authorId = scanner.nextInt();
+          String authorId = scanner.nextLine();
 
-          UUID authorUUID = UUID.fromString((String.valueOf(authorId)));
+          UUID authorUUID = UUID.fromString(authorId);
           Stream<Author> authorStream = authors.stream();
-          Author author = authorStream.filter(a -> a.getId() == authorUUID).findFirst().orElse(null);
+          Author author = authorStream.filter(a -> {
+            return a.getId().equals(authorUUID);
+          }).findFirst().orElse(null);
           if (author == null) {
-            System.out.println("Author not found");
+            System.out.println(String.format("Author not found for UUID %s", authorId));
             break;
           }
           addBook(books, bookTitle, author);
         }
-        case 4 -> listBooks(books);
-        case 5 -> listAuthors(authors);
-        case 6 -> listClients(clients);
+        case 4 -> listAuthors(authors);
+        case 5 -> listClients(clients);
+        case 6 -> listBooks(books);
         case 7 -> {
           System.out.println("Goodbye!");
           scanner.close();
