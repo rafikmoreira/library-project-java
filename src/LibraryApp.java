@@ -3,6 +3,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
+import java.util.stream.Stream;
 import model.Author;
 import model.Book;
 import model.Client;
@@ -46,10 +48,25 @@ public class LibraryApp {
           LocalDate clientBirthDate = LocalDate.parse(scanner.nextLine());
           addClient(clients, clientName, clientBirthDate);
         }
-        case 3 -> listBooks(books);
-        case 4 -> listAuthors(authors);
-        case 5 -> listClients(clients);
-        case 6 -> {
+        case 3 -> {
+          System.out.println("Enter book's title:");
+          String bookTitle = scanner.nextLine();
+          System.out.println("Enter author's ID:");
+          int authorId = scanner.nextInt();
+
+          UUID authorUUID = UUID.fromString((String.valueOf(authorId)));
+          Stream<Author> authorStream = authors.stream();
+          Author author = authorStream.filter(a -> a.getId() == authorUUID).findFirst().orElse(null);
+          if (author == null) {
+            System.out.println("Author not found");
+            break;
+          }
+          addBook(books, bookTitle, author);
+        }
+        case 4 -> listBooks(books);
+        case 5 -> listAuthors(authors);
+        case 6 -> listClients(clients);
+        case 7 -> {
           System.out.println("Goodbye!");
           scanner.close();
           System.exit(0);
@@ -76,7 +93,9 @@ public class LibraryApp {
 
   public static void listBooks(List<Book> books) {
     for (Book book : books) {
-      System.out.println(book);
+
+      System.out.println(
+          String.format("ID: %s Title: %s Author: %s", book.getId(), book.getTitle(), book.getAuthor().getName()));
     }
   }
 
@@ -89,21 +108,9 @@ public class LibraryApp {
 
   public static void listClients(List<Client> clients) {
     for (Client client : clients) {
-      System.out.println(client);
+      System.out
+          .println(String.format("ID: %s Name: %s", client.getId(), client.getName()));
     }
   }
 
-  public static int showMenu(Scanner scanner) {
-    System.out.println("1. Add author");
-    System.out.println("2. Add client");
-    System.out.println("3. Add book");
-    System.out.println("4. List authors");
-    System.out.println("5. List clients");
-    System.out.println("6. List books");
-    System.out.println("7. Exit");
-
-    int option = scanner.nextInt();
-
-    return option;
-  }
 }
